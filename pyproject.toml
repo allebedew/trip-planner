@@ -1,0 +1,23 @@
+[project]
+name = "trip-planner"
+version = "0.1.0"
+description = "Two agents and two simulated humans plan a one-day hike in Picos de Europa."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "langchain>=1.4.7",
+    "langchain-anthropic>=1.7.7",
+    "python-dotenv>=1.2.4",
+]
+
+[project.scripts]
+trip = "trip_planner.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]

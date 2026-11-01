@@ -1,0 +1,22 @@
+{
+  "source": "Open-Meteo Forecast API",
+  "snapshot_date": "2026-10-31",
+  "location": "Posada de Valdeón",
+  "days": [
+    {"date": "2026-11-01", "rain_probability": 0, "rain_mm": 0.0, "wind_kmh": 6.4, "temp_min_c": 4.2},
+    {"date": "2026-11-02", "rain_probability": 0, "rain_mm": 0.0, "wind_kmh": 12.2, "temp_min_c": 4.3},
+    {"date": "2026-11-03", "rain_probability": 15, "rain_mm": 0.9, "wind_kmh": 13.4, "temp_min_c": 3.7},
+    {"date": "2026-11-04", "rain_probability": 3, "rain_mm": 0.0, "wind_kmh": 7.1, "temp_min_c": 2.9},
+    {"date": "2026-11-05", "rain_probability": 2, "rain_mm": 0.0, "wind_kmh": 7.2, "temp_min_c": 2.6},
+    {"date": "2026-11-06", "rain_probability": 18, "rain_mm": 0.0, "wind_kmh": 6.9, "temp_min_c": 3.9},
+    {"date": "2026-11-07", "rain_probability": 26, "rain_mm": 0.0, "wind_kmh": 9.5, "temp_min_c": 5.2},
+    {"date": "2026-11-08", "rain_probability": 26, "rain_mm": 10.0, "wind_kmh": 24.7, "temp_min_c": 6.7},
+    {"date": "2026-11-09", "rain_probability": 24, "rain_mm": 9.2, "wind_kmh": 27.9, "temp_min_c": 9.1},
+    {"date": "2026-11-10", "rain_probability": 48, "rain_mm": 2.4, "wind_kmh": 22.0, "temp_min_c": 5.4},
+    {"date": "2026-11-11", "rain_probability": 48, "rain_mm": 23.2, "wind_kmh": 15.7, "temp_min_c": 7.6},
+    {"date": "2026-11-12", "rain_probability": 48, "rain_mm": 14.0, "wind_kmh": 11.0, "temp_min_c": 10.4},
+    {"date": "2026-11-13", "rain_probability": 52, "rain_mm": 0.8, "wind_kmh": 17.0, "temp_min_c": 10.8},
+    {"date": "2026-11-14", "rain_probability": 44, "rain_mm": 1.75, "wind_kmh": 12.8, "temp_min_c": 8.2},
+    {"date": "2026-11-15", "rain_probability": 43, "rain_mm": 0.15, "wind_kmh": 9.5, "temp_min_c": 4.5}
+  ]
+}

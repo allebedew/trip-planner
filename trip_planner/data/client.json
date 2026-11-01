@@ -1,0 +1,26 @@
+{
+  "name": "Test Client",
+  "fitness": "medium",
+  "knee_issue": true,
+  "preferred_km": 9.8,
+  "max_duration_min": 300,
+  "earliest_date": "2026-11-01",
+  "latest_date": "2026-11-15",
+  "gear": [
+    "backpack",
+    "base_layer",
+    "buff",
+    "first_aid_kit",
+    "gloves",
+    "hiking_boots",
+    "hiking_pants",
+    "hiking_socks",
+    "insulated_jacket",
+    "mid_layer",
+    "phone",
+    "rain_jacket",
+    "sun_hat",
+    "sunglasses",
+    "water_bladder"
+  ]
+}

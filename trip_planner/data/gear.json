@@ -1,0 +1,24 @@
+{
+  "source": "Tim's Multi-Day Hiking Gear List, Australian Hiker",
+  "source_url": "https://australianhiker.com.au/gear/multiday-gear-list/",
+  "items": [
+    {"id": "backpack", "name": "Backpack", "needed_when": ["always"]},
+    {"id": "pack_cover", "name": "Pack rain cover", "needed_when": ["rain"]},
+    {"id": "water_bladder", "name": "Water bladder, 3 l", "needed_when": ["always"]},
+    {"id": "hiking_boots", "name": "Hiking footwear", "needed_when": ["always"]},
+    {"id": "hiking_socks", "name": "Hiking socks", "needed_when": ["always"]},
+    {"id": "hiking_pants", "name": "Hiking pants", "needed_when": ["always"]},
+    {"id": "base_layer", "name": "Long-sleeved base layer", "needed_when": ["always"]},
+    {"id": "mid_layer", "name": "Midweight long-sleeved top", "needed_when": ["cold"]},
+    {"id": "insulated_jacket", "name": "Insulated jacket", "needed_when": ["cold"]},
+    {"id": "rain_jacket", "name": "Rain jacket", "needed_when": ["always"]},
+    {"id": "rain_pants", "name": "Rain pants", "needed_when": ["rain"]},
+    {"id": "gloves", "name": "Liner gloves", "needed_when": ["cold"]},
+    {"id": "buff", "name": "Buff", "needed_when": ["cold"]},
+    {"id": "sun_hat", "name": "Sun cap", "needed_when": ["always"]},
+    {"id": "sunglasses", "name": "Sunglasses", "needed_when": ["always"]},
+    {"id": "trekking_poles", "name": "Trekking poles", "needed_when": ["knee_issue"]},
+    {"id": "first_aid_kit", "name": "First aid kit", "needed_when": ["always"]},
+    {"id": "phone", "name": "Phone", "needed_when": ["always"]}
+  ]
+}

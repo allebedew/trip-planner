@@ -1,0 +1,13 @@
+{
+  "source": "Parque Nacional de los Picos de Europa, MITECO",
+  "source_url": "https://www.miteco.gob.es/es/parques-nacionales-oapn/red-parques-nacionales/parques-nacionales/picos-europa/guia-visitante/itinerarios.html",
+  "routes": [
+    {"id": "PR-PNPE-2", "name": "Lagos de Covadonga", "difficulty": "low", "distance_km": 5.0, "descent_m": 50, "duration_min": 150, "url": "https://www.miteco.gob.es/es/parques-nacionales-oapn/red-parques-nacionales/parques-nacionales/picos-europa/guia-visitante/ruta-lagos-covadonga.html"},
+    {"id": "PR-PNPE-3", "name": "Ruta del Cares", "difficulty": "medium", "distance_km": 21.0, "descent_m": 899, "duration_min": 330, "url": "https://www.miteco.gob.es/es/parques-nacionales-oapn/red-parques-nacionales/parques-nacionales/picos-europa/guia-visitante/ruta-cares.html"},
+    {"id": "PR-PNPE-9", "name": "Ruta Soto-Vegabaño", "difficulty": "low", "distance_km": 9.8, "descent_m": 391, "duration_min": 195, "url": "https://www.miteco.gob.es/es/parques-nacionales-oapn/red-parques-nacionales/parques-nacionales/picos-europa/guia-visitante/ruta-soto-vegabano.html"},
+    {"id": "PR-PNPE-10", "name": "Ruta pueblos de Sajambre", "difficulty": "low", "distance_km": 10.2, "descent_m": 405, "duration_min": 210, "url": "https://www.miteco.gob.es/es/parques-nacionales-oapn/red-parques-nacionales/parques-nacionales/picos-europa/guia-visitante/ruta-pueblos-sajambre.html"},
+    {"id": "PR-PNPE-12", "name": "Ruta Vega de Llos", "difficulty": "low", "distance_km": 13.5, "descent_m": 511, "duration_min": 240, "url": "https://www.miteco.gob.es/es/parques-nacionales-oapn/red-parques-nacionales/parques-nacionales/picos-europa/guia-visitante/ruta-vega-llos.html"},
+    {"id": "PR-PNPE-16", "name": "Collado Jermoso", "difficulty": "high", "distance_km": 8.2, "descent_m": 1214, "duration_min": 480, "url": "https://www.miteco.gob.es/es/parques-nacionales-oapn/red-parques-nacionales/parques-nacionales/picos-europa/guia-visitante/ruta-collado-jermoso.html"},
+    {"id": "PR-PNPE-26", "name": "Ruta Hayedo de las Ilces", "difficulty": "medium", "distance_km": 10.4, "descent_m": 400, "duration_min": 270, "url": "https://www.miteco.gob.es/es/parques-nacionales-oapn/red-parques-nacionales/parques-nacionales/picos-europa/guia-visitante/ruta-hayedo-ilces.html"}
+  ]
+}
