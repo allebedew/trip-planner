@@ -9,9 +9,15 @@ from trip_planner.actions import Message
 
 load_dotenv()
 
-MODEL = os.getenv("TRIP_MODEL", "claude-haiku-5-5")
-# Thinking counts toward this limit on Claude 5 models.
+MODEL = "claude-haiku-5-5"
 MAX_TOKENS = 4096
+EFFORT = "medium"  # low | medium | high | xhigh | max
+THINKING_DISPLAY = "omitted"  # omitted | summarized
+MAX_RETRIES = 2
+TIMEOUT_S = 600
+# USD per 1M tokens for MODEL, prompts up to 100K tokens.
+INPUT_PRICE_USD = 0.10
+OUTPUT_PRICE_USD = 0.50
 # Limit per tick. One LLM step takes two graph steps: the model and the tools.
 MAX_GRAPH_STEPS = 32
 
@@ -59,10 +65,13 @@ def render(message: Message) -> str:
 
 def to_event(message: AnyMessage) -> dict:
     if isinstance(message, AIMessage):
+        usage = message.usage_metadata
         return {
             "kind": "llm_call",
-            "input_tokens": message.usage_metadata["input_tokens"],
-            "output_tokens": message.usage_metadata["output_tokens"],
+            "input_tokens": usage["input_tokens"],
+            "output_tokens": usage["output_tokens"],
+            "thinking_tokens": usage.get("output_token_details", {}).get("reasoning", 0),
+            "cost_usd": (usage["input_tokens"] * INPUT_PRICE_USD + usage["output_tokens"] * OUTPUT_PRICE_USD) / 1e6,
             "text": message.text,
             "calls": [{"action": call["name"], "args": call["args"]} for call in message.tool_calls],
         }
@@ -76,7 +85,14 @@ class Agent:
     def __init__(self, name: str, actions: list, instructions: str):
         if not os.getenv("ANTHROPIC_API_KEY"):
             raise SystemExit("Set ANTHROPIC_API_KEY in .env")
-        model = ChatAnthropic(model=MODEL, max_tokens=MAX_TOKENS)
+        model = ChatAnthropic(
+            model=MODEL,
+            max_tokens=MAX_TOKENS,
+            reasoning_effort=EFFORT,
+            thinking={"type": "adaptive", "display": THINKING_DISPLAY},
+            max_retries=MAX_RETRIES,
+            timeout=TIMEOUT_S,
+        )
         self.graph = create_agent(model, actions, system_prompt=instructions, name=name)
         self.history: list[AnyMessage] = []
 

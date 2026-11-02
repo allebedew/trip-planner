@@ -81,6 +81,8 @@ def metrics(events: list[dict], duration_s: float) -> dict:
         "llm_calls": len(llm_calls),
         "input_tokens": sum(e["input_tokens"] for e in llm_calls),
         "output_tokens": sum(e["output_tokens"] for e in llm_calls),
+        "thinking_tokens": sum(e["thinking_tokens"] for e in llm_calls),
+        "cost_usd": round(sum(e["cost_usd"] for e in llm_calls), 6),
     }
 
 
@@ -95,6 +97,8 @@ def summarize(runs: list[dict]) -> dict:
         "total_llm_calls": sum(r["metrics"]["llm_calls"] for r in runs),
         "total_input_tokens": sum(r["metrics"]["input_tokens"] for r in runs),
         "total_output_tokens": sum(r["metrics"]["output_tokens"] for r in runs),
+        "total_thinking_tokens": sum(r["metrics"]["thinking_tokens"] for r in runs),
+        "total_cost_usd": round(sum(r["metrics"]["cost_usd"] for r in runs), 6),
     }
 
 
