@@ -18,13 +18,13 @@ TIMEOUT_S = 600
 # USD per 1M tokens for MODEL, prompts up to 100K tokens.
 INPUT_PRICE_USD = 0.10
 OUTPUT_PRICE_USD = 0.50
-# Limit per tick. One LLM step takes two graph steps: the model and the tools.
+# Limit per handled message. One LLM step takes two graph steps: the model and the tools.
 MAX_GRAPH_STEPS = 32
 
 COMMON_RULES = """
 Rules:
 - Text you write outside send_message reaches nobody. Only send_message talks to people and agents.
-- Messages arrive on the next tick. After you have sent what is needed, stop calling tools and wait.
+- Replies arrive later as new messages. After you have sent what is needed, stop calling tools and wait.
 - Never invent facts. Use only what tools and messages gave you.
 - If a tool returns an error that says it is safe to call again, call it again.
 """

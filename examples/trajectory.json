@@ -45,18 +45,19 @@
     "booking_id": "BK-PR-PNPE-10-2026-11-01"
   },
   "metrics": {
-    "ticks": 8,
-    "duration_s": 21.278,
+    "duration_s": 21.216,
     "messages": 8,
     "actions": 13,
     "faults": 3,
     "llm_calls": 19,
-    "input_tokens": 38552,
-    "output_tokens": 2402
+    "input_tokens": 39247,
+    "output_tokens": 2516,
+    "thinking_tokens": 347,
+    "cost_usd": 0.005183
   },
   "events": [
     {
-      "tick": 0,
+      "time_s": 0.01,
       "actor": "human_a",
       "kind": "message",
       "sender": "human_a",
@@ -64,11 +65,13 @@
       "text": "Hi, this is Test Client! I would like a one-day hike in Picos de Europa in the first half of November, about 9.8 km long, on the day with the best weather. My knee hurts on long descents."
     },
     {
-      "tick": 0,
+      "time_s": 5.49,
       "actor": "agent_a",
       "kind": "llm_call",
-      "input_tokens": 1030,
+      "input_tokens": 1035,
       "output_tokens": 29,
+      "thinking_tokens": 0,
+      "cost_usd": 0.000118,
       "text": "",
       "calls": [
         {
@@ -78,18 +81,20 @@
       ]
     },
     {
-      "tick": 0,
+      "time_s": 5.49,
       "actor": "agent_a",
       "kind": "action",
       "action": "get_trip_options",
       "result": "{\"error\": \"get_trip_options timed out. It is safe to call it again.\"}"
     },
     {
-      "tick": 0,
+      "time_s": 5.49,
       "actor": "agent_a",
       "kind": "llm_call",
-      "input_tokens": 1089,
+      "input_tokens": 1094,
       "output_tokens": 29,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0001239,
       "text": "",
       "calls": [
         {
@@ -99,18 +104,20 @@
       ]
     },
     {
-      "tick": 0,
+      "time_s": 5.49,
       "actor": "agent_a",
       "kind": "action",
       "action": "get_trip_options",
       "result": "{\"error\": \"get_trip_options timed out. It is safe to call it again.\"}"
     },
     {
-      "tick": 0,
+      "time_s": 5.49,
       "actor": "agent_a",
       "kind": "llm_call",
-      "input_tokens": 1148,
+      "input_tokens": 1153,
       "output_tokens": 29,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0001298,
       "text": "",
       "calls": [
         {
@@ -120,59 +127,65 @@
       ]
     },
     {
-      "tick": 0,
+      "time_s": 5.49,
       "actor": "agent_a",
       "kind": "action",
       "action": "get_trip_options",
       "result": "{\"routes\": [{\"id\": \"PR-PNPE-2\", \"name\": \"Lagos de Covadonga\", \"difficulty\": \"low\", \"distance_km\": 5.0, \"descent_m\": 50, \"duration_min\": 150}, {\"id\": \"PR-PNPE-9\", \"name\": \"Ruta Soto-Vegabaño\", \"difficulty\": \"low\", \"distance_km\": 9.8, \"descent_m\": 391, \"duration_min\": 195}, {\"id\": \"PR-PNPE-10\", \"name\": \"Ruta pueblos de Sajambre\", \"difficulty\": \"low\", \"distance_km\": 10.2, \"descent_m\": 405, \"duration_min\": 210}, {\"id\": \"PR-PNPE-12\", \"name\": \"Ruta Vega de Llos\", \"difficulty\": \"low\", \"distance_km\": 13.5, \"descent_m\": 511, \"duration_min\": 240}, {\"id\": \"PR-PNPE-26\", \"name\": \"Ruta Hayedo de las Ilces\", \"difficulty\": \"medium\", \"distance_km\": 10.4, \"descent_m\": 400, \"duration_min\": 270}], \"forecast\": [{\"date\": \"2026-11-01\", \"rain_probability\": 0, \"rain_mm\": 0.0, \"wind_kmh\": 6.4, \"temp_min_c\": 4.2}, {\"date\": \"2026-11-02\", \"rain_probability\": 0, \"rain_mm\": 0.0, \"wind_kmh\": 12.2, \"temp_min_c\": 4.3}, {\"date\": \"2026-11-03\", \"rain_probability\": 15, \"rain_mm\": 0.9, \"wind_kmh\": 13.4, \"temp_min_c\": 3.7}, {\"date\": \"2026-11-04\", \"rain_probability\": 3, \"rain_mm\": 0.0, \"wind_kmh\": 7.1, \"temp_min_c\": 2.9}, {\"date\": \"2026-11-05\", \"rain_probability\": 2, \"rain_mm\": 0.0, \"wind_kmh\": 7.2, \"temp_min_c\": 2.6}, {\"date\": \"2026-11-06\", \"rain_probability\": 18, \"rain_mm\": 0.0, \"wind_kmh\": 6.9, \"temp_min_c\": 3.9}, {\"date\": \"2026-11-07\", \"rain_probability\": 26, \"rain_mm\": 0.0, \"wind_kmh\": 9.5, \"temp_min_c\": 5.2}, {\"date\": \"2026-11-08\", \"rain_probability\": 26, \"rain_mm\": 10.0, \"wind_kmh\": 24.7, \"temp_min_c\": 6.7}, {\"date\": \"2026-11-09\", \"rain_probability\": 24, \"rain_mm\": 9.2, \"wind_kmh\": 27.9, \"temp_min_c\": 9.1}, {\"date\": \"2026-11-10\", \"rain_probability\": 48, \"rain_mm\": 2.4, \"wind_kmh\": 22.0, \"temp_min_c\": 5.4}, {\"date\": \"2026-11-11\", \"rain_probability\": 48, \"rain_mm\": 23.2, \"wind_kmh\": 15.7, \"temp_min_c\": 7.6}, {\"date\": \"2026-11-12\", \"rain_probability\": 48, \"rain_mm\": 14.0, \"wind_kmh\": 11.0, \"temp_min_c\": 10.4}, {\"date\": \"2026-11-13\", \"rain_probability\": 52, \"rain_mm\": 0.8, \"wind_kmh\": 17.0, \"temp_min_c\": 10.8}, {\"date\": \"2026-11-14\", \"rain_probability\": 44, \"rain_mm\": 1.75, \"wind_kmh\": 12.8, \"temp_min_c\": 8.2}, {\"date\": \"2026-11-15\", \"rain_probability\": 43, \"rain_mm\": 0.15, \"wind_kmh\": 9.5, \"temp_min_c\": 4.5}]}"
     },
     {
-      "tick": 0,
+      "time_s": 5.49,
       "actor": "agent_a",
       "kind": "llm_call",
-      "input_tokens": 2470,
-      "output_tokens": 344,
+      "input_tokens": 2475,
+      "output_tokens": 319,
+      "thinking_tokens": 144,
+      "cost_usd": 0.000407,
       "text": "",
       "calls": [
         {
           "action": "send_message",
           "args": {
             "to": "agent_b",
-            "text": "Booking request for human_a (Test Client): route PR-PNPE-9 (Ruta Soto-Vegabaño, 9.8 km), date 2026-11-01 (rain probability 0%, wind 6.4 km/h). Please send a booking id."
+            "text": "Booking request for Test Client: route PR-PNPE-9 (Ruta Soto-Vegabaño, 9.8 km), date 2026-11-01 (0% rain probability, lowest wind of the 0% days, 6.4 km/h). Please confirm or refuse, and send a booking id if confirmed."
           }
         }
       ]
     },
     {
-      "tick": 0,
+      "time_s": 5.49,
       "actor": "agent_a",
       "kind": "action",
       "action": "send_message",
       "result": "{\"sent_to\": \"agent_b\"}"
     },
     {
-      "tick": 0,
+      "time_s": 5.49,
       "actor": "agent_a",
       "kind": "llm_call",
-      "input_tokens": 2833,
-      "output_tokens": 36,
-      "text": "Routes and forecast are in, and I've sent a booking request to agent_b. Waiting for their reply.",
+      "input_tokens": 2813,
+      "output_tokens": 127,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00034480000000000003,
+      "text": "I've sent agent_b the request for Test Client: route PR-PNPE-9 (Ruta Soto-Vegabaño, 9.8 km) on 2026-11-01. That date has 0% rain probability and the lowest wind of the dry days (6.4 km/h). I'm waiting for agent_b to confirm or refuse, and will finish the booking once they send a booking id.",
       "calls": []
     },
     {
-      "tick": 1,
+      "time_s": 5.49,
       "actor": "agent_a",
       "kind": "message",
       "sender": "agent_a",
       "to": "agent_b",
-      "text": "Booking request for human_a (Test Client): route PR-PNPE-9 (Ruta Soto-Vegabaño, 9.8 km), date 2026-11-01 (rain probability 0%, wind 6.4 km/h). Please send a booking id."
+      "text": "Booking request for Test Client: route PR-PNPE-9 (Ruta Soto-Vegabaño, 9.8 km), date 2026-11-01 (0% rain probability, lowest wind of the 0% days, 6.4 km/h). Please confirm or refuse, and send a booking id if confirmed."
     },
     {
-      "tick": 1,
+      "time_s": 8.67,
       "actor": "agent_b",
       "kind": "llm_call",
-      "input_tokens": 994,
+      "input_tokens": 1018,
       "output_tokens": 84,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0001438,
       "text": "",
       "calls": [
         {
@@ -185,100 +198,110 @@
       ]
     },
     {
-      "tick": 1,
+      "time_s": 8.67,
       "actor": "agent_b",
       "kind": "action",
       "action": "check_trip",
       "result": "{\"available\": false, \"reason\": \"Route PR-PNPE-9 is closed on every date: fallen trees on the path\"}"
     },
     {
-      "tick": 1,
+      "time_s": 8.67,
       "actor": "agent_b",
       "kind": "llm_call",
-      "input_tokens": 1123,
-      "output_tokens": 126,
+      "input_tokens": 1147,
+      "output_tokens": 122,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0001757,
       "text": "",
       "calls": [
         {
           "action": "send_message",
           "args": {
             "to": "agent_a",
-            "text": "Cannot book PR-PNPE-9 on 2026-11-01. Reason: the route is closed on every date due to fallen trees on the path. Please propose another route or date."
+            "text": "Refused: route PR-PNPE-9 is closed on every date due to fallen trees on the path, so I cannot book 2026-11-01 for Test Client."
           }
         }
       ]
     },
     {
-      "tick": 1,
+      "time_s": 8.67,
       "actor": "agent_b",
       "kind": "action",
       "action": "send_message",
       "result": "{\"sent_to\": \"agent_a\"}"
     },
     {
-      "tick": 1,
+      "time_s": 8.67,
       "actor": "agent_b",
       "kind": "llm_call",
-      "input_tokens": 1268,
-      "output_tokens": 83,
-      "text": "I checked route PR-PNPE-9 for 2026-11-01 and it is not available. The route is closed on every date because of fallen trees on the path. I sent agent_a the refusal and asked them to propose another route or date. I'll wait for their next request.",
+      "input_tokens": 1288,
+      "output_tokens": 81,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00016930000000000002,
+      "text": "I checked route PR-PNPE-9 for 2026-11-01 and it is closed on every date because of fallen trees on the path, so I did not book it. I've sent agent_a the refusal and the reason. I'm waiting for the next trip request.",
       "calls": []
     },
     {
-      "tick": 2,
+      "time_s": 8.67,
       "actor": "agent_b",
       "kind": "message",
       "sender": "agent_b",
       "to": "agent_a",
-      "text": "Cannot book PR-PNPE-9 on 2026-11-01. Reason: the route is closed on every date due to fallen trees on the path. Please propose another route or date."
+      "text": "Refused: route PR-PNPE-9 is closed on every date due to fallen trees on the path, so I cannot book 2026-11-01 for Test Client."
     },
     {
-      "tick": 2,
+      "time_s": 11.53,
       "actor": "agent_a",
       "kind": "llm_call",
-      "input_tokens": 2935,
-      "output_tokens": 371,
+      "input_tokens": 3002,
+      "output_tokens": 377,
+      "thinking_tokens": 178,
+      "cost_usd": 0.0004887,
       "text": "",
       "calls": [
         {
           "action": "send_message",
           "args": {
             "to": "agent_b",
-            "text": "Understood. PR-PNPE-9 is out. New request for human_a (Test Client): route PR-PNPE-10 (Ruta pueblos de Sajambre, 10.2 km, the closest remaining route to 9.8 km), date 2026-11-01 (rain probability 0%, wind 6.4 km/h). Please send a booking id."
+            "text": "Understood, PR-PNPE-9 is closed on every date and is out. New request for Test Client: route PR-PNPE-10 (Ruta pueblos de Sajambre, 10.2 km, the next closest to 9.8 km), date 2026-11-01 (0% rain probability, 6.4 km/h wind). Please confirm or refuse, and send a booking id if confirmed."
           }
         }
       ]
     },
     {
-      "tick": 2,
+      "time_s": 11.53,
       "actor": "agent_a",
       "kind": "action",
       "action": "send_message",
       "result": "{\"sent_to\": \"agent_b\"}"
     },
     {
-      "tick": 2,
+      "time_s": 11.53,
       "actor": "agent_a",
       "kind": "llm_call",
-      "input_tokens": 3325,
-      "output_tokens": 102,
-      "text": "I've asked agent_b to book PR-PNPE-10 (Ruta pueblos de Sajambre, 10.2 km) on 2026-11-01. PR-PNPE-9 was refused because the path is closed on every date due to fallen trees. I'm waiting for agent_b to send a booking id.",
+      "input_tokens": 3398,
+      "output_tokens": 96,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0003878,
+      "text": "I've sent agent_b a new request: route PR-PNPE-10 (Ruta pueblos de Sajambre, 10.2 km) on 2026-11-01, since PR-PNPE-9 is closed on every date. I'm waiting for agent_b's confirmation or refusal.",
       "calls": []
     },
     {
-      "tick": 3,
+      "time_s": 11.53,
       "actor": "agent_a",
       "kind": "message",
       "sender": "agent_a",
       "to": "agent_b",
-      "text": "Understood. PR-PNPE-9 is out. New request for human_a (Test Client): route PR-PNPE-10 (Ruta pueblos de Sajambre, 10.2 km, the closest remaining route to 9.8 km), date 2026-11-01 (rain probability 0%, wind 6.4 km/h). Please send a booking id."
+      "text": "Understood, PR-PNPE-9 is closed on every date and is out. New request for Test Client: route PR-PNPE-10 (Ruta pueblos de Sajambre, 10.2 km, the next closest to 9.8 km), date 2026-11-01 (0% rain probability, 6.4 km/h wind). Please confirm or refuse, and send a booking id if confirmed."
     },
     {
-      "tick": 3,
+      "time_s": 14.63,
       "actor": "agent_b",
       "kind": "llm_call",
-      "input_tokens": 1476,
+      "input_tokens": 1507,
       "output_tokens": 84,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00019270000000000002,
       "text": "",
       "calls": [
         {
@@ -291,55 +314,59 @@
       ]
     },
     {
-      "tick": 3,
+      "time_s": 14.63,
       "actor": "agent_b",
       "kind": "action",
       "action": "check_trip",
       "result": "{\"available\": true}"
     },
     {
-      "tick": 3,
+      "time_s": 14.63,
       "actor": "agent_b",
       "kind": "llm_call",
-      "input_tokens": 1571,
-      "output_tokens": 197,
+      "input_tokens": 1602,
+      "output_tokens": 199,
+      "thinking_tokens": 25,
+      "cost_usd": 0.0002597,
       "text": "",
       "calls": [
         {
           "action": "send_message",
           "args": {
             "to": "human_b",
-            "text": "Trip request from agent_a: route PR-PNPE-10 (Ruta pueblos de Sajambre, 10.2 km) on 2026-11-01 for client human_a (Test Client). Rain probability 0%, wind 6.4 km/h. The route and guide are available that day. Shall I book it?"
+            "text": "agent_a requests a trip for Test Client: route PR-PNPE-10 (Ruta pueblos de Sajambre, 10.2 km) on 2026-11-01. The route and guide are available that day. Forecast from agent_a: 0% rain probability, 6.4 km/h wind. Shall I book it?"
           }
         }
       ]
     },
     {
-      "tick": 3,
+      "time_s": 14.63,
       "actor": "agent_b",
       "kind": "action",
       "action": "send_message",
       "result": "{\"sent_to\": \"human_b\"}"
     },
     {
-      "tick": 3,
+      "time_s": 14.63,
       "actor": "agent_b",
       "kind": "llm_call",
-      "input_tokens": 1786,
-      "output_tokens": 52,
-      "text": "PR-PNPE-10 is available on 2026-11-01. I have asked human_b for approval to book it for the Test Client. I'll book once they agree.",
+      "input_tokens": 1819,
+      "output_tokens": 75,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0002194,
+      "text": "PR-PNPE-10 is available on 2026-11-01, so I've asked you (human_b) whether to book it for Test Client. I'll book once you agree, then send agent_a the booking details. Nothing is booked yet.",
       "calls": []
     },
     {
-      "tick": 4,
+      "time_s": 14.63,
       "actor": "agent_b",
       "kind": "message",
       "sender": "agent_b",
       "to": "human_b",
-      "text": "Trip request from agent_a: route PR-PNPE-10 (Ruta pueblos de Sajambre, 10.2 km) on 2026-11-01 for client human_a (Test Client). Rain probability 0%, wind 6.4 km/h. The route and guide are available that day. Shall I book it?"
+      "text": "agent_a requests a trip for Test Client: route PR-PNPE-10 (Ruta pueblos de Sajambre, 10.2 km) on 2026-11-01. The route and guide are available that day. Forecast from agent_a: 0% rain probability, 6.4 km/h wind. Shall I book it?"
     },
     {
-      "tick": 5,
+      "time_s": 14.63,
       "actor": "human_b",
       "kind": "message",
       "sender": "human_b",
@@ -347,11 +374,13 @@
       "text": "Yes, I can take this trip."
     },
     {
-      "tick": 5,
+      "time_s": 18.67,
       "actor": "agent_b",
       "kind": "llm_call",
-      "input_tokens": 1858,
+      "input_tokens": 1914,
       "output_tokens": 110,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0002464,
       "text": "",
       "calls": [
         {
@@ -365,19 +394,21 @@
       ]
     },
     {
-      "tick": 5,
+      "time_s": 18.67,
       "actor": "agent_b",
       "kind": "action",
       "action": "book_trip",
       "result": "{\"error\": \"book_trip timed out. It is safe to call it again.\"}"
     },
     {
-      "tick": 5,
+      "time_s": 18.67,
       "actor": "agent_b",
       "kind": "llm_call",
-      "input_tokens": 1996,
-      "output_tokens": 110,
-      "text": "",
+      "input_tokens": 2052,
+      "output_tokens": 139,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00027470000000000006,
+      "text": "The booking timed out, and the tool says it is safe to retry, so I'll call it again.",
       "calls": [
         {
           "action": "book_trip",
@@ -390,59 +421,65 @@
       ]
     },
     {
-      "tick": 5,
+      "time_s": 18.67,
       "actor": "agent_b",
       "kind": "action",
       "action": "book_trip",
       "result": "{\"booking_id\": \"BK-PR-PNPE-10-2026-11-01\", \"client_name\": \"Test Client\", \"route_id\": \"PR-PNPE-10\", \"date\": \"2026-11-01\"}"
     },
     {
-      "tick": 5,
+      "time_s": 18.67,
       "actor": "agent_b",
       "kind": "llm_call",
-      "input_tokens": 2178,
-      "output_tokens": 133,
+      "input_tokens": 2263,
+      "output_tokens": 125,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0002888,
       "text": "",
       "calls": [
         {
           "action": "send_message",
           "args": {
             "to": "agent_a",
-            "text": "Booked for human_a (Test Client). Booking ID: BK-PR-PNPE-10-2026-11-01. Route: PR-PNPE-10. Date: 2026-11-01."
+            "text": "Booked: Test Client, route PR-PNPE-10, date 2026-11-01. Booking ID: BK-PR-PNPE-10-2026-11-01."
           }
         }
       ]
     },
     {
-      "tick": 5,
+      "time_s": 18.67,
       "actor": "agent_b",
       "kind": "action",
       "action": "send_message",
       "result": "{\"sent_to\": \"agent_a\"}"
     },
     {
-      "tick": 5,
+      "time_s": 18.67,
       "actor": "agent_b",
       "kind": "llm_call",
-      "input_tokens": 2330,
-      "output_tokens": 116,
-      "text": "The trip is booked. Booking ID: BK-PR-PNPE-10-2026-11-01 for Test Client on route PR-PNPE-10 on 2026-11-01.\n\nThe first booking attempt timed out. The tool said it was safe to retry, so I called it again and that call succeeded. I sent the booking ID, route and date to agent_a.",
+      "input_tokens": 2407,
+      "output_tokens": 113,
+      "thinking_tokens": 0,
+      "cost_usd": 0.00029720000000000007,
+      "text": "The trip is booked. Test Client is on route PR-PNPE-10 for 2026-11-01, booking ID BK-PR-PNPE-10-2026-11-01.\n\nThe first booking attempt timed out, so I retried as the tool allowed. The retry returned this booking ID. I've sent the route, date and booking ID to agent_a.",
       "calls": []
     },
     {
-      "tick": 6,
+      "time_s": 18.67,
       "actor": "agent_b",
       "kind": "message",
       "sender": "agent_b",
       "to": "agent_a",
-      "text": "Booked for human_a (Test Client). Booking ID: BK-PR-PNPE-10-2026-11-01. Route: PR-PNPE-10. Date: 2026-11-01."
+      "text": "Booked: Test Client, route PR-PNPE-10, date 2026-11-01. Booking ID: BK-PR-PNPE-10-2026-11-01."
     },
     {
-      "tick": 6,
+      "time_s": 21.22,
       "actor": "agent_a",
       "kind": "llm_call",
-      "input_tokens": 3500,
+      "input_tokens": 3559,
       "output_tokens": 124,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0004179,
       "text": "",
       "calls": [
         {
@@ -456,23 +493,25 @@
       ]
     },
     {
-      "tick": 6,
+      "time_s": 21.22,
       "actor": "agent_a",
       "kind": "action",
       "action": "finish",
       "result": "{\"sent_to\": \"human_a\"}"
     },
     {
-      "tick": 6,
+      "time_s": 21.22,
       "actor": "agent_a",
       "kind": "llm_call",
-      "input_tokens": 3642,
-      "output_tokens": 243,
-      "text": "Your hike is booked and the plan has been sent to you.\n\n- **Route:** Ruta pueblos de Sajambre (PR-PNPE-10), 10.2 km\n- **Date:** 1 November 2026, with 0% rain probability and 6.4 km/h wind\n- **Booking ID:** BK-PR-PNPE-10-2026-11-01\n\nI first picked Ruta Soto-Vegabaño (9.8 km), but agent_b reported that its path is closed on every date because of fallen trees. Ruta pueblos de Sajambre was the closest remaining route to your preferred length.\n\nThis route has about 405 m of descent over 10.2 km. Since your knee hurts on long descents, you may want to check that before you go.",
+      "input_tokens": 3701,
+      "output_tokens": 254,
+      "thinking_tokens": 0,
+      "cost_usd": 0.0004971,
+      "text": "The trip is booked and the plan has been sent to human_a.\n\n- **Route:** PR-PNPE-10, Ruta pueblos de Sajambre (10.2 km, 405 m of descent, rated low difficulty)\n- **Date:** 2026-11-01, with 0% rain probability and 6.4 km/h wind\n- **Booking ID:** BK-PR-PNPE-10-2026-11-01\n\nThe first choice, PR-PNPE-9 (Ruta Soto-Vegabaño, 9.8 km), was closed on every date because of fallen trees, so I switched to the next closest route. The client's knee was mentioned, but it was not part of the selection rule, so I did not factor it in. The route has 405 m of descent, which the client may want to consider.",
       "calls": []
     },
     {
-      "tick": 7,
+      "time_s": 21.22,
       "actor": "agent_a",
       "kind": "message",
       "sender": "agent_a",

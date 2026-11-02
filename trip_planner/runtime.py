@@ -1,17 +1,17 @@
 import asyncio
 import json
 import time
-from collections import Counter, defaultdict
+from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 
-from langsmith import trace, traceable
+from langsmith import traceable
 
-from trip_planner.actions import ClientEnvironment, GuideEnvironment
+from trip_planner.actions import ClientEnvironment, GuideEnvironment, Message
 from trip_planner.agent import AGENT_A_INSTRUCTIONS, AGENT_B_INSTRUCTIONS, Agent
 from trip_planner.humans import CLIENT, human_a_opening, human_b
 
-MAX_TICKS = 30
+MAX_MESSAGES = 30
 
 
 def trace_outputs(run: dict) -> dict:
@@ -21,41 +21,63 @@ def trace_outputs(run: dict) -> dict:
 
 @traceable(name="trip_simulation", process_outputs=trace_outputs)
 async def simulate(seed: int) -> dict:
-    """Runs ticks until nobody has anything to say. A message sent on one tick arrives on the next,
-    so the order of events does not depend on how fast each LLM answers."""
+    """Every participant has a queue and handles its messages one by one, as soon as they arrive.
+    The run ends when no message is left unhandled."""
     started = time.perf_counter()
     client_env, guide_env = ClientEnvironment(seed, CLIENT), GuideEnvironment(seed)
     agents = {
         "agent_a": Agent("agent_a", client_env.actions(), AGENT_A_INSTRUCTIONS),
         "agent_b": Agent("agent_b", guide_env.actions(), AGENT_B_INSTRUCTIONS),
     }
-    mailbox = [human_a_opening()]
+    envs = {"agent_a": client_env, "agent_b": guide_env}
+    # human_a only reads, so it has no queue.
+    queues = {name: asyncio.Queue() for name in ("agent_a", "agent_b", "human_b")}
     events = []
+    unhandled = 0
+    finished = asyncio.Event()
     error = None
 
-    try:
-        for tick in range(MAX_TICKS):
-            async with trace(f"tick {tick}", inputs={"messages": [asdict(m) for m in mailbox]}) as span:
-                inboxes = defaultdict(list)
-                for message in mailbox:
-                    inboxes[message.to].append(message)
-                    events.append({"tick": tick, "actor": message.sender, "kind": "message", **asdict(message)})
+    def log(actor: str, event: dict) -> None:
+        events.append({"time_s": round(time.perf_counter() - started, 2), "actor": actor, **event})
 
-                mailbox = [human_b(message) for message in inboxes["human_b"]]
+    def send(message: Message) -> None:
+        nonlocal unhandled
+        log(message.sender, {"kind": "message", **asdict(message)})
+        if sum(e["kind"] == "message" for e in events) > MAX_MESSAGES:
+            raise RuntimeError(f"More than {MAX_MESSAGES} messages")
+        if message.to in queues:
+            unhandled += 1
+            queues[message.to].put_nowait(message)
 
-                active = [name for name in agents if inboxes[name]]
-                results = await asyncio.gather(*(agents[name].handle(inboxes[name]) for name in active))
-                for name, agent_events in zip(active, results):
-                    events += [{"tick": tick, "actor": name, **event} for event in agent_events]
+    async def reply(name: str, message: Message) -> list[Message]:
+        if name == "human_b":
+            return [human_b(message)]
+        for event in await agents[name].handle([message]):
+            log(name, event)
+        return envs[name].take_outbox()
 
-                mailbox += client_env.take_outbox() + guide_env.take_outbox()
-                span.end(outputs={"messages": [asdict(m) for m in mailbox]})
+    async def worker(name: str) -> None:
+        nonlocal unhandled, error
+        while True:
+            message = await queues[name].get()
+            try:
+                for answer in await reply(name, message):
+                    send(answer)
+            except Exception as failure:
+                # An API failure, the step limit or the message limit: the run is recorded as failed.
+                error = repr(failure)
+                finished.set()
+            # Answers are queued before this, so zero means nobody has anything left to do.
+            unhandled -= 1
+            if unhandled == 0:
+                finished.set()
 
-            if not mailbox:
-                break
-    except Exception as failure:
-        # An API failure or the step limit: the run is recorded as failed.
-        error = repr(failure)
+    workers = [asyncio.create_task(worker(name)) for name in queues]
+    send(human_a_opening())
+    await finished.wait()
+    for task in workers:
+        task.cancel()
+    await asyncio.gather(*workers, return_exceptions=True)
 
     plan = client_env.plan
     return {
@@ -73,7 +95,6 @@ def metrics(events: list[dict], duration_s: float) -> dict:
     llm_calls = [e for e in events if e["kind"] == "llm_call"]
     actions = [e for e in events if e["kind"] == "action"]
     return {
-        "ticks": events[-1]["tick"] + 1,
         "duration_s": round(duration_s, 3),
         "messages": sum(e["kind"] == "message" for e in events),
         "actions": len(actions),
@@ -92,7 +113,7 @@ def summarize(runs: list[dict]) -> dict:
         "runs": len(runs),
         "success_rate": sum(r["status"] == "success" for r in runs) / len(runs),
         "outcomes": {str(outcome): count for outcome, count in outcomes.items()},
-        "avg_ticks": sum(r["metrics"]["ticks"] for r in runs) / len(runs),
+        "avg_duration_s": round(sum(r["metrics"]["duration_s"] for r in runs) / len(runs), 3),
         "total_faults": sum(r["metrics"]["faults"] for r in runs),
         "total_llm_calls": sum(r["metrics"]["llm_calls"] for r in runs),
         "total_input_tokens": sum(r["metrics"]["input_tokens"] for r in runs),

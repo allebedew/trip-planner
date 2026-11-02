@@ -26,7 +26,7 @@ def main() -> None:
     for seed in range(1, args.runs + 1):
         result = asyncio.run(simulate(seed))
         for event in result["events"]:
-            print(f"tick {event['tick']:>2}  {describe(event)}")
+            print(f"{event['time_s']:>6.2f}s  {describe(event)}")
         print(f"{result['status']}: {result['outcome'] or result['error']}")
         print(f"Saved to {save_run(result, RUNS_DIR)}\n")
         results.append(result)

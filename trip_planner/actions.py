@@ -87,7 +87,7 @@ class Environment:
         self.outbox: list[Message] = []
 
     def send_message(self, to: str, text: str) -> dict:
-        """Send a message. It is delivered on the next tick."""
+        """Send a message. A reply, if any, arrives later as a new message."""
         if to not in LINKS[self.name]:
             return {"error": f"{self.name} cannot write to {to}. Allowed: {sorted(LINKS[self.name])}"}
         self.outbox.append(Message(sender=self.name, to=to, text=text))
