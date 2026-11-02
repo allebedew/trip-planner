@@ -33,8 +33,8 @@ Each agent reaches only its own environment, they share no state.
 | A | `send_message`, `get_trip_options`*, `finish` |
 | B | `send_message`, `check_trip`*, `book_trip`* |
 
-Every participant has a message queue and handles its messages one by one as soon as they arrive, the
-agents work concurrently. The run ends when no message is left unhandled.
+Messages are handled one at a time, in the order they were sent. The run ends when no message is left
+to handle.
 
 The LLM chooses the route and the date. Code filters unsafe routes, computes the gear and the bookings, and
 validates the result.

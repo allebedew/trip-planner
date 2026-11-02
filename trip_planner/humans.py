@@ -15,6 +15,6 @@ def human_a_opening() -> Message:
     )
 
 
-def human_b(message: Message) -> Message:
+async def human_b(message: Message) -> list[Message]:
     """The guide agrees: agent_b only asks about trips it has already checked."""
-    return Message(sender="human_b", to="agent_b", text="Yes, I can take this trip.")
+    return [Message(sender="human_b", to="agent_b", text="Yes, I can take this trip.")]

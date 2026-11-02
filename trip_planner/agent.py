@@ -1,4 +1,5 @@
 import os
+from collections.abc import Callable
 
 from dotenv import load_dotenv
 from langchain.agents import create_agent
@@ -82,7 +83,7 @@ class Agent:
     """The same agent for both roles: only its environment and instructions differ.
     The history stays inside the object, so agents share no state."""
 
-    def __init__(self, env: Environment, instructions: str):
+    def __init__(self, env: Environment, instructions: str, log: Callable[[str, dict], None]):
         if not os.getenv("ANTHROPIC_API_KEY"):
             raise SystemExit("Set ANTHROPIC_API_KEY in .env")
         model = ChatAnthropic(
@@ -95,14 +96,16 @@ class Agent:
         )
         self.name = env.name
         self.env = env
+        self.log = log
         self.graph = create_agent(model, env.actions(), system_prompt=instructions, name=self.name)
         self.history: list[AnyMessage] = []
 
-    async def handle(self, message: Message) -> list[dict]:
-        """Runs the LLM and its actions until it stops, returns what happened as events."""
+    async def handle(self, message: Message) -> list[Message]:
+        """Runs the LLM and its actions until it stops, logs what happened, returns the messages it sent."""
         messages = [*self.history, HumanMessage(render(message))]
         result = await self.graph.ainvoke({"messages": messages}, {"recursion_limit": MAX_GRAPH_STEPS})
-        new_messages = result["messages"][len(messages) :]
+        for new_message in result["messages"][len(messages) :]:
+            self.log(self.name, to_event(new_message))
         # The API rejects an empty assistant turn in the history.
         self.history = [m for m in result["messages"] if m.content or getattr(m, "tool_calls", None)]
-        return [to_event(m) for m in new_messages]
+        return self.env.take_outbox()
