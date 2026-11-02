@@ -5,7 +5,7 @@ from langchain.agents import create_agent
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import AIMessage, AnyMessage, HumanMessage
 
-from trip_planner.actions import Message
+from trip_planner.actions import Environment, Message
 
 load_dotenv()
 
@@ -79,10 +79,10 @@ def to_event(message: AnyMessage) -> dict:
 
 
 class Agent:
-    """The same agent for both roles: only its actions and instructions differ.
+    """The same agent for both roles: only its environment and instructions differ.
     The history stays inside the object, so agents share no state."""
 
-    def __init__(self, name: str, actions: list, instructions: str):
+    def __init__(self, env: Environment, instructions: str):
         if not os.getenv("ANTHROPIC_API_KEY"):
             raise SystemExit("Set ANTHROPIC_API_KEY in .env")
         model = ChatAnthropic(
@@ -93,13 +93,14 @@ class Agent:
             max_retries=MAX_RETRIES,
             timeout=TIMEOUT_S,
         )
-        self.graph = create_agent(model, actions, system_prompt=instructions, name=name)
+        self.name = env.name
+        self.env = env
+        self.graph = create_agent(model, env.actions(), system_prompt=instructions, name=self.name)
         self.history: list[AnyMessage] = []
 
-    async def handle(self, inbox: list[Message]) -> list[dict]:
+    async def handle(self, message: Message) -> list[dict]:
         """Runs the LLM and its actions until it stops, returns what happened as events."""
-        prompt = HumanMessage("\n\n".join(render(m) for m in inbox))
-        messages = [*self.history, prompt]
+        messages = [*self.history, HumanMessage(render(message))]
         result = await self.graph.ainvoke({"messages": messages}, {"recursion_limit": MAX_GRAPH_STEPS})
         new_messages = result["messages"][len(messages) :]
         # The API rejects an empty assistant turn in the history.

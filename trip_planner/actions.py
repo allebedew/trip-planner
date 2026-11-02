@@ -149,8 +149,7 @@ class ClientEnvironment(Environment):
             f"Your trip is booked: {allowed[route_id]['name']} on {date}, booking {booking_id}. "
             f"Bring: {', '.join(gear['have'])}. You still need: {', '.join(gear['missing']) or 'nothing'}."
         )
-        self.outbox.append(Message(sender=self.name, to="human_a", text=text))
-        return {"sent_to": "human_a"}
+        return self.send_message("human_a", text)
 
 
 class GuideEnvironment(Environment):

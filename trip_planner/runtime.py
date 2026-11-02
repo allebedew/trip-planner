@@ -19,75 +19,79 @@ def trace_outputs(run: dict) -> dict:
     return {key: run[key] for key in ("status", "outcome", "error", "metrics")}
 
 
-@traceable(name="trip_simulation", process_outputs=trace_outputs)
-async def simulate(seed: int) -> dict:
+class Mailroom:
     """Every participant has a queue and handles its messages one by one, as soon as they arrive.
     The run ends when no message is left unhandled."""
-    started = time.perf_counter()
-    client_env, guide_env = ClientEnvironment(seed, CLIENT), GuideEnvironment(seed)
-    agents = {
-        "agent_a": Agent("agent_a", client_env.actions(), AGENT_A_INSTRUCTIONS),
-        "agent_b": Agent("agent_b", guide_env.actions(), AGENT_B_INSTRUCTIONS),
-    }
-    envs = {"agent_a": client_env, "agent_b": guide_env}
-    # human_a only reads, so it has no queue.
-    queues = {name: asyncio.Queue() for name in ("agent_a", "agent_b", "human_b")}
-    events = []
-    unhandled = 0
-    finished = asyncio.Event()
-    error = None
 
-    def log(actor: str, event: dict) -> None:
-        events.append({"time_s": round(time.perf_counter() - started, 2), "actor": actor, **event})
+    def __init__(self, agents: list[Agent]):
+        self.agents = {agent.name: agent for agent in agents}
+        # human_a only reads, so it has no queue.
+        self.queues = {name: asyncio.Queue() for name in [*self.agents, "human_b"]}
+        self.unhandled = 0
+        self.finished = asyncio.Event()
+        self.started = time.perf_counter()
+        self.events: list[dict] = []
+        self.error: str | None = None
 
-    def send(message: Message) -> None:
-        nonlocal unhandled
-        log(message.sender, {"kind": "message", **asdict(message)})
-        if sum(e["kind"] == "message" for e in events) > MAX_MESSAGES:
+    async def run(self, first: Message) -> None:
+        workers = [asyncio.create_task(self.worker(name)) for name in self.queues]
+        self.send(first)
+        await self.finished.wait()
+        for task in workers:
+            task.cancel()
+        await asyncio.gather(*workers, return_exceptions=True)
+
+    def send(self, message: Message) -> None:
+        self.log(message.sender, {"kind": "message", **asdict(message)})
+        if sum(e["kind"] == "message" for e in self.events) > MAX_MESSAGES:
             raise RuntimeError(f"More than {MAX_MESSAGES} messages")
-        if message.to in queues:
-            unhandled += 1
-            queues[message.to].put_nowait(message)
+        if message.to in self.queues:
+            self.unhandled += 1
+            self.queues[message.to].put_nowait(message)
 
-    async def reply(name: str, message: Message) -> list[Message]:
-        if name == "human_b":
-            return [human_b(message)]
-        for event in await agents[name].handle([message]):
-            log(name, event)
-        return envs[name].take_outbox()
-
-    async def worker(name: str) -> None:
-        nonlocal unhandled, error
+    async def worker(self, name: str) -> None:
         while True:
-            message = await queues[name].get()
+            message = await self.queues[name].get()
             try:
-                for answer in await reply(name, message):
-                    send(answer)
+                for answer in await self.reply(name, message):
+                    self.send(answer)
             except Exception as failure:
                 # An API failure, the step limit or the message limit: the run is recorded as failed.
-                error = repr(failure)
-                finished.set()
+                self.error = repr(failure)
+                self.finished.set()
             # Answers are queued before this, so zero means nobody has anything left to do.
-            unhandled -= 1
-            if unhandled == 0:
-                finished.set()
+            self.unhandled -= 1
+            if self.unhandled == 0:
+                self.finished.set()
 
-    workers = [asyncio.create_task(worker(name)) for name in queues]
-    send(human_a_opening())
-    await finished.wait()
-    for task in workers:
-        task.cancel()
-    await asyncio.gather(*workers, return_exceptions=True)
+    async def reply(self, name: str, message: Message) -> list[Message]:
+        if name == "human_b":
+            return [human_b(message)]
+        agent = self.agents[name]
+        for event in await agent.handle(message):
+            self.log(name, event)
+        return agent.env.take_outbox()
+
+    def log(self, actor: str, event: dict) -> None:
+        self.events.append({"time_s": round(time.perf_counter() - self.started, 2), "actor": actor, **event})
+
+
+@traceable(name="trip_simulation", process_outputs=trace_outputs)
+async def simulate(seed: int) -> dict:
+    started = time.perf_counter()
+    client_env, guide_env = ClientEnvironment(seed, CLIENT), GuideEnvironment(seed)
+    mailroom = Mailroom([Agent(client_env, AGENT_A_INSTRUCTIONS), Agent(guide_env, AGENT_B_INSTRUCTIONS)])
+    await mailroom.run(human_a_opening())
 
     plan = client_env.plan
     return {
         "seed": seed,
         "status": "success" if plan else "failed",
         "outcome": f"{plan['route']['id']} {plan['date']}" if plan else None,
-        "error": error,
+        "error": mailroom.error,
         "plan": plan,
-        "metrics": metrics(events, time.perf_counter() - started),
-        "events": events,
+        "metrics": metrics(mailroom.events, time.perf_counter() - started),
+        "events": mailroom.events,
     }
 
 
