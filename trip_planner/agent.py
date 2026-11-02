@@ -73,11 +73,11 @@ class Agent:
     """The same agent for both roles: only its actions and instructions differ.
     The history stays inside the object, so agents share no state."""
 
-    def __init__(self, actions: list, instructions: str):
+    def __init__(self, name: str, actions: list, instructions: str):
         if not os.getenv("ANTHROPIC_API_KEY"):
             raise SystemExit("Set ANTHROPIC_API_KEY in .env")
         model = ChatAnthropic(model=MODEL, max_tokens=MAX_TOKENS)
-        self.graph = create_agent(model, actions, system_prompt=instructions)
+        self.graph = create_agent(model, actions, system_prompt=instructions, name=name)
         self.history: list[AnyMessage] = []
 
     async def handle(self, inbox: list[Message]) -> list[dict]:

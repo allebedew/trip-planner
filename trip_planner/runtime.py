@@ -5,6 +5,8 @@ from collections import Counter, defaultdict
 from dataclasses import asdict
 from pathlib import Path
 
+from langsmith import trace, traceable
+
 from trip_planner.actions import ClientEnvironment, GuideEnvironment
 from trip_planner.agent import AGENT_A_INSTRUCTIONS, AGENT_B_INSTRUCTIONS, Agent
 from trip_planner.humans import CLIENT, human_a_opening, human_b
@@ -12,14 +14,20 @@ from trip_planner.humans import CLIENT, human_a_opening, human_b
 MAX_TICKS = 30
 
 
+def trace_outputs(run: dict) -> dict:
+    """The trace already holds every step, so the root keeps only the result."""
+    return {key: run[key] for key in ("status", "outcome", "error", "metrics")}
+
+
+@traceable(name="trip_simulation", process_outputs=trace_outputs)
 async def simulate(seed: int) -> dict:
     """Runs ticks until nobody has anything to say. A message sent on one tick arrives on the next,
     so the order of events does not depend on how fast each LLM answers."""
     started = time.perf_counter()
     client_env, guide_env = ClientEnvironment(seed, CLIENT), GuideEnvironment(seed)
     agents = {
-        "agent_a": Agent(client_env.actions(), AGENT_A_INSTRUCTIONS),
-        "agent_b": Agent(guide_env.actions(), AGENT_B_INSTRUCTIONS),
+        "agent_a": Agent("agent_a", client_env.actions(), AGENT_A_INSTRUCTIONS),
+        "agent_b": Agent("agent_b", guide_env.actions(), AGENT_B_INSTRUCTIONS),
     }
     mailbox = [human_a_opening()]
     events = []
@@ -27,19 +35,22 @@ async def simulate(seed: int) -> dict:
 
     try:
         for tick in range(MAX_TICKS):
-            inboxes = defaultdict(list)
-            for message in mailbox:
-                inboxes[message.to].append(message)
-                events.append({"tick": tick, "actor": message.sender, "kind": "message", **asdict(message)})
+            async with trace(f"tick {tick}", inputs={"messages": [asdict(m) for m in mailbox]}) as span:
+                inboxes = defaultdict(list)
+                for message in mailbox:
+                    inboxes[message.to].append(message)
+                    events.append({"tick": tick, "actor": message.sender, "kind": "message", **asdict(message)})
 
-            mailbox = [human_b(message) for message in inboxes["human_b"]]
+                mailbox = [human_b(message) for message in inboxes["human_b"]]
 
-            active = [name for name in agents if inboxes[name]]
-            results = await asyncio.gather(*(agents[name].handle(inboxes[name]) for name in active))
-            for name, agent_events in zip(active, results):
-                events += [{"tick": tick, "actor": name, **event} for event in agent_events]
+                active = [name for name in agents if inboxes[name]]
+                results = await asyncio.gather(*(agents[name].handle(inboxes[name]) for name in active))
+                for name, agent_events in zip(active, results):
+                    events += [{"tick": tick, "actor": name, **event} for event in agent_events]
 
-            mailbox += client_env.take_outbox() + guide_env.take_outbox()
+                mailbox += client_env.take_outbox() + guide_env.take_outbox()
+                span.end(outputs={"messages": [asdict(m) for m in mailbox]})
+
             if not mailbox:
                 break
     except Exception as failure:
